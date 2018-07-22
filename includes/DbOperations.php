@@ -46,7 +46,7 @@ class DbOperations{
 		return $password;
 	}
 
-	private function getAllUsers(){
+	public function getAllUsers(){
 		$stmt = $this->con->prepare("SELECT id,email,name,school FROM users;");
 		$stmt -> execute();
 		$stmt -> bind_result( $id,$email,$name,$school);
@@ -57,8 +57,9 @@ class DbOperations{
 			$user['email']= $email;
 			$user['name']= $name;
 			$user['school']= $school;
-			array_push(users, user);
+			array_push($users, $user);
 		}
+		return $users;
 	}
 
 	public function getUserByEmail($email){
