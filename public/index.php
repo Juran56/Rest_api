@@ -79,7 +79,7 @@ $app -> post('/userlogin',function(Request $request, Response $response){
 			$response_data['error'] = false;
 			$response_data['message']="login Successfull";
 			$response_data['user']=$user;
-			
+
 			$response->write(json_encode($response_data));
 
 			return $response
@@ -115,7 +115,17 @@ $app -> post('/userlogin',function(Request $request, Response $response){
 
 });
 
-
+$app -> post('/allusers',function(Request $request, Response $response){
+	$db = new DbOperations;
+	$users = $db->getAllUsers();
+	$response_data = array();
+	$response_data['error']=false;
+	$response_data['message']=$users;
+	$response->write(json_encode($response_data));
+	return $response
+			->withHeader('Content-type','application/json')
+			->withStatus(200);
+});
 
 
 function haveEmptyParameters($required_params, $response){
