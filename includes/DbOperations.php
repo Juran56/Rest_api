@@ -76,6 +76,22 @@ class DbOperations{
 		return $user;
 	}
 
+	public function updatePassword($currentpassword,$newpassword,$email){
+		$hashed_password = $this->getUsersPasswordByEmail($email);
+		if (password_verify($currentpassword,$hashed_password)) {
+			$hashed_password = password_hash($newpassword,PASSWORD_DEFAULT);
+			$stmt = $this->con->prepare("UPDATE users SET password = ? WHERE email=?");
+			$stmt->bind_param("ss",$hashed_password,$email);
+			if ($stmt->execute()) {
+				return PASSWORD_CHANGED;
+			}
+			return PASSWORD_NOT_CHANGED;
+		}
+		else{
+			return PASSWORD_DO_NOT_MATCH;
+		}
+	}
+
 	private function isEmailExist($email){
 		$stmt = $this->con->prepare("SELECT id FROM users WHERE email =?");
 		$stmt ->bind_param('s',$email);
